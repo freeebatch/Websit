@@ -4,13 +4,17 @@ async function loadBatches() {
   const response = await fetch('./batch.json');
   const data = await response.json();
   allBatches = data;  // Store the fetched batches for later search
-  displayBatches(data);
+  displayBatches(data); // Initially display all batches
 }
 
 // Function to display batch cards
 function displayBatches(batches) {
   const container = document.getElementById('cards-container');
   container.innerHTML = ''; // Clear previous cards
+
+  if (batches.length === 0) {
+    container.innerHTML = '<p>No batches found</p>'; // Show message if no batches are found
+  }
 
   batches.forEach(batch => {
     const card = document.createElement('div');
@@ -35,9 +39,13 @@ function displayBatches(batches) {
 // Function to search batches based on batch name
 function searchBatches() {
   const searchTerm = document.getElementById('search-input').value.toLowerCase();
+  
+  // Filter the batches based on batch name (case-insensitive)
   const filteredBatches = allBatches.filter(batch => 
     batch.batch_name.toLowerCase().includes(searchTerm)
   );
+  
+  // Display the filtered batches
   displayBatches(filteredBatches);
 }
 
