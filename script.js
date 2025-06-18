@@ -1,9 +1,18 @@
+let allBatches = []; // Store all batches for search functionality
+
 async function loadBatches() {
   const response = await fetch('./batch.json');
   const data = await response.json();
-  const container = document.getElementById('cards-container');
+  allBatches = data;  // Store the fetched batches for later search
+  displayBatches(data);
+}
 
-  data.forEach(batch => {
+// Function to display batch cards
+function displayBatches(batches) {
+  const container = document.getElementById('cards-container');
+  container.innerHTML = ''; // Clear previous cards
+
+  batches.forEach(batch => {
     const card = document.createElement('div');
     card.className = 'card';
     card.style.backgroundImage = `url(${batch.batch_banner})`;
@@ -23,6 +32,16 @@ async function loadBatches() {
   });
 }
 
+// Function to search batches based on batch name
+function searchBatches() {
+  const searchTerm = document.getElementById('search-input').value.toLowerCase();
+  const filteredBatches = allBatches.filter(batch => 
+    batch.batch_name.toLowerCase().includes(searchTerm)
+  );
+  displayBatches(filteredBatches);
+}
+
+// Function to copy batch ID to clipboard
 function copyToClipboard(text) {
   navigator.clipboard.writeText(text).then(() => {
     alert("Batch ID copied: " + text);
